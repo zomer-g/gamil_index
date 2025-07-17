@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body { font-family: 'Roboto', sans-serif; padding: 10px; }
+      label { font-weight: bold; display: block; margin-top: 10px; }
+      input, button { width: 100%; padding: 8px; margin-top: 5px; }
+      button { background-color: #4285f4; color: white; border: none; cursor: pointer; }
+      button:hover { background-color: #3367d6; }
+    </style>
+  </head>
+  <body>
+    <h3>📤 ייצוא מיילים ל-Drive</h3>
+    <label for="query">שאילתת Gmail:</label>
+    <input type="text" id="query" placeholder="למשל: label:לקוחות">
+
+    <label for="folder">קישור לתיקיית Drive:</label>
+    <input type="text" id="folder" placeholder="https://drive.google.com/drive/folders/...">
+
+    <button onclick="startExport()">🚀 התחלת ייצוא</button>
+
+    <div id="result" style="margin-top: 15px; color: green;"></div>
+
+    <script>
+      function startExport() {
+        const query = document.getElementById("query").value;
+        const folder = document.getElementById("folder").value;
+        if (!query || !folder) {
+          document.getElementById("result").innerText = "❗ יש למלא את כל השדות.";
+          return;
+        }
+        google.script.run.withSuccessHandler(msg => {
+          document.getElementById("result").innerText = msg;
+        }).withFailureHandler(err => {
+          document.getElementById("result").innerText = "❌ שגיאה: " + err.message;
+        }).exportGmailToDriveIndex(query, folder);
+      }
+    </script>
+  </body>
+</html>
